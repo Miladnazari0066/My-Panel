@@ -29,6 +29,7 @@
   <link rel="stylesheet" href="css/tasks.css">
   <link rel="stylesheet" href="css/loans.css">
   <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/datepicker.css">
 </head>
 <body>
   <div id="loading-screen" class="loading-screen">
@@ -36,7 +37,6 @@
     <p class="loading-text">در حال بارگذاری...</p>
   </div>
 
-  <!-- صفحه ورود -->
   <div id="auth-screen" class="auth-screen hidden">
     <div class="auth-bg">
       <div class="blob blob-1"></div>
@@ -91,7 +91,6 @@
     </div>
   </div>
 
-  <!-- اپ اصلی -->
   <div id="main-app" class="app-shell hidden">
     <aside class="sidebar">
       <div class="sidebar-brand">
@@ -182,7 +181,6 @@
       </header>
 
       <main class="app-main">
-        <!-- داشبورد -->
         <section class="page" data-page="dashboard">
           <div class="greeting-card">
             <h2 class="greeting-text" id="greeting-text">سلام 👋</h2>
@@ -287,7 +285,6 @@
           </div>
         </section>
 
-        <!-- برنامه امروز -->
         <section class="page hidden" data-page="tasks">
           <div class="tasks-toolbar">
             <div class="filter-tabs">
@@ -333,7 +330,6 @@
           </button>
         </section>
 
-        <!-- وام‌ها -->
         <section class="page hidden" data-page="loans">
           <div class="loans-toolbar">
             <div class="loans-summary hidden" id="loans-summary">
@@ -412,7 +408,6 @@
 
   <div id="toast-container" class="toast-container"></div>
 
-  <!-- مودال تسک -->
   <div class="modal-backdrop" id="task-modal-backdrop" data-task-modal-close></div>
   <div class="modal" id="task-modal" role="dialog" aria-modal="true" aria-labelledby="task-modal-title">
     <div class="modal-header">
@@ -446,7 +441,7 @@
           </div>
           <div class="form-group">
             <label class="form-label" for="task-due-date">تاریخ</label>
-            <input type="date" id="task-due-date" class="input" dir="ltr">
+            <input type="text" id="task-due-date" class="input" placeholder="انتخاب تاریخ" dir="ltr">
           </div>
         </div>
         <div class="modal-error hidden" id="task-modal-error"></div>
@@ -461,7 +456,6 @@
     </form>
   </div>
 
-  <!-- مودال تایید -->
   <div class="modal-backdrop" id="confirm-backdrop"></div>
   <div class="modal modal-small" id="confirm-modal" role="dialog" aria-modal="true">
     <div class="modal-body modal-body-center">
@@ -481,7 +475,6 @@
     </div>
   </div>
 
-  <!-- مودال وام (با انتخاب بانک) -->
   <div class="modal-backdrop" id="loan-modal-backdrop" data-loan-modal-close></div>
   <div class="modal" id="loan-modal" role="dialog" aria-modal="true" aria-labelledby="loan-modal-title">
     <div class="modal-header">
@@ -500,9 +493,7 @@
         <div class="form-row">
           <div class="form-group">
             <label class="form-label" for="loan-bank">بانک عامل <span class="required">*</span></label>
-            <select id="loan-bank" class="input" required>
-              <!-- گزینه‌ها با جاوااسکریپت پر می‌شوند -->
-            </select>
+            <select id="loan-bank" class="input" required></select>
           </div>
           <div class="form-group">
             <label class="form-label" for="loan-title">عنوان وام <span class="required">*</span></label>
@@ -527,7 +518,11 @@
         </div>
         <div class="form-group">
           <label class="form-label" for="loan-start-date">تاریخ اولین قسط <span class="required">*</span></label>
-          <input type="date" id="loan-start-date" class="input" dir="ltr" required>
+          <input type="text" id="loan-start-date" class="input" placeholder="انتخاب تاریخ" dir="ltr" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="loan-note">یادداشت</label>
+          <textarea id="loan-note" class="input" rows="2" maxlength="500" placeholder="توضیحات (اختیاری)"></textarea>
         </div>
         <div class="modal-error hidden" id="loan-modal-error"></div>
       </div>
@@ -541,7 +536,6 @@
     </form>
   </div>
 
-  <!-- مودال ثبت پرداخت -->
   <div class="modal-backdrop" id="payment-modal-backdrop" data-payment-modal-close></div>
   <div class="modal" id="payment-modal" role="dialog" aria-modal="true" aria-labelledby="payment-modal-title">
     <div class="modal-header">
@@ -565,7 +559,7 @@
         </div>
         <div class="form-group">
           <label class="form-label" for="payment-paid-at">تاریخ پرداخت <span class="required">*</span></label>
-          <input type="date" id="payment-paid-at" class="input" dir="ltr" required>
+          <input type="text" id="payment-paid-at" class="input" placeholder="انتخاب تاریخ" dir="ltr" required>
         </div>
         <div class="modal-error hidden" id="payment-modal-error"></div>
       </div>
@@ -579,7 +573,6 @@
     </form>
   </div>
 
-  <!-- مودال تاریخچه -->
   <div class="modal-backdrop" id="payments-history-backdrop" data-payments-history-close></div>
   <div class="modal" id="payments-history-modal" role="dialog" aria-modal="true" aria-labelledby="payments-history-title">
     <div class="modal-header">
