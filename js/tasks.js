@@ -1,6 +1,7 @@
 import { supabase } from './supabase.js';
 import { showToast } from './ui.js';
 import { confirmDialog } from './modal.js';
+import { initDatePicker } from './datepicker.js';
 
 let currentUser = null;
 let tasks = [];
@@ -11,15 +12,9 @@ let listenersAttached = false;
 
 const PRIORITY_LABELS = { low: 'کم', medium: 'متوسط', high: 'زیاد' };
 
-// ---------- utils ----------
 function escapeHtml(str) {
   if (str == null) return '';
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
 function toPersianNum(n) {
@@ -28,10 +23,7 @@ function toPersianNum(n) {
 
 function todayStr() {
   const d = new Date();
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${y}-${m}-${day}`;
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
 function parseDateLocal(str) {
@@ -70,7 +62,6 @@ function formatDueDate(str) {
   }
 }
 
-// ---------- render ----------
 function getFilteredTasks() {
   return tasks.filter((t) => {
     if (priorityFilter !== 'all' && t.priority !== priorityFilter) return false;
@@ -143,19 +134,10 @@ function updateStats() {
   if (el) el.textContent = toPersianNum(count);
 }
 
-// ---------- data ----------
 async function loadTasks() {
   if (!currentUser) return;
-  const { data, error } = await supabase
-    .from('tasks')
-    .select('*')
-    .order('created_at', { ascending: false });
-
-  if (error) {
-    console.error('Load tasks failed:', error);
-    showToast('خطا در بارگذاری تسک‌ها', 'error');
-    return;
-  }
+  const { data, error } = await supabase.from('tasks').select('*').order('created_at', { ascending: false });
+  if (error) { showToast('خطا در بارگذاری تسک‌ها', 'error'); return; }
   tasks = data || [];
   render();
   updateStats();
@@ -174,16 +156,12 @@ async function toggleTask(id) {
   render();
   updateStats();
 
-  const { error } = await supabase
-    .from('tasks')
-    .update({
-      completed: newCompleted,
-      completed_at: newCompleted ? new Date().toISOString() : null,
-    })
-    .eq('id', id);
+  const { error } = await supabase.from('tasks').update({
+    completed: newCompleted,
+    completed_at: newCompleted ? new Date().toISOString() : null,
+  }).eq('id', id);
 
   if (error) {
-    console.error('Toggle failed:', error);
     task.completed = oldCompleted;
     task.completed_at = oldCompletedAt;
     render();
@@ -207,11 +185,7 @@ async function deleteTask(id) {
 
   const { error } = await supabase.from('tasks').delete().eq('id', id);
 
-  if (error) {
-    console.error('Delete failed:', error);
-    showToast('خطا در حذف تسک', 'error');
-    return;
-  }
+  if (error) { showToast('خطا در حذف تسک', 'error'); return; }
 
   tasks = tasks.filter((t) => t.id !== id);
   render();
@@ -219,7 +193,6 @@ async function deleteTask(id) {
   showToast('تسک حذف شد');
 }
 
-// ---------- modal ----------
 function openTaskModal(task = null) {
   const modal = document.getElementById('task-modal');
   const backdrop = document.getElementById('task-modal-backdrop');
@@ -289,12 +262,6 @@ async function handleTaskSubmit(e) {
     return;
   }
 
-  if (title.length > 200) {
-    errorEl.textContent = 'عنوان نباید بیشتر از ۲۰۰ کاراکتر باشد';
-    errorEl.classList.remove('hidden');
-    return;
-  }
-
   submitBtn.disabled = true;
   btnText.classList.add('hidden');
   loader.classList.remove('hidden');
@@ -303,33 +270,14 @@ async function handleTaskSubmit(e) {
 
   try {
     if (isEdit) {
-      const { data, error } = await supabase
-        .from('tasks')
-        .update({ title, description: description || null, priority, due_date })
-        .eq('id', idInput.value)
-        .select()
-        .single();
-
+      const { data, error } = await supabase.from('tasks').update({ title, description: description || null, priority, due_date }).eq('id', idInput.value).select().single();
       if (error) throw error;
       const idx = tasks.findIndex((t) => t.id === idInput.value);
       if (idx >= 0 && data) tasks[idx] = data;
     } else {
-      const { data, error } = await supabase
-        .from('tasks')
-        .insert({
-          user_id: currentUser.id,
-          title,
-          description: description || null,
-          priority,
-          due_date,
-        })
-        .select()
-        .single();
-
+      const { data, error } = await supabase.from('tasks').insert({ user_id: currentUser.id, title, description: description || null, priority, due_date }).select().single();
       if (error) throw error;
-      if (data && !tasks.find((t) => t.id === data.id)) {
-        tasks.unshift(data);
-      }
+      if (data && !tasks.find((t) => t.id === data.id)) tasks.unshift(data);
     }
 
     render();
@@ -347,53 +295,30 @@ async function handleTaskSubmit(e) {
   }
 }
 
-// ---------- real-time ----------
 function subscribeToChanges() {
   if (!currentUser) return;
-
-  subscription = supabase
-    .channel(`tasks-${currentUser.id}`)
-    .on(
-      'postgres_changes',
-      {
-        event: '*',
-        schema: 'public',
-        table: 'tasks',
-        filter: `user_id=eq.${currentUser.id}`,
-      },
-      handleRealtime
-    )
-    .subscribe();
+  subscription = supabase.channel(`tasks-${currentUser.id}`).on('postgres_changes', { event: '*', schema: 'public', table: 'tasks', filter: `user_id=eq.${currentUser.id}` }, handleRealtime).subscribe();
 }
 
 function handleRealtime(payload) {
   const { eventType, new: newRow, old: oldRow } = payload;
-
-  if (eventType === 'INSERT' && newRow) {
-    if (!tasks.find((t) => t.id === newRow.id)) tasks.unshift(newRow);
-  } else if (eventType === 'UPDATE' && newRow) {
-    const idx = tasks.findIndex((t) => t.id === newRow.id);
-    if (idx >= 0) tasks[idx] = newRow;
-  } else if (eventType === 'DELETE') {
-    const id = oldRow?.id;
-    if (id) tasks = tasks.filter((t) => t.id !== id);
-  }
-
+  if (eventType === 'INSERT' && newRow) { if (!tasks.find((t) => t.id === newRow.id)) tasks.unshift(newRow); }
+  else if (eventType === 'UPDATE' && newRow) { const idx = tasks.findIndex((t) => t.id === newRow.id); if (idx >= 0) tasks[idx] = newRow; }
+  else if (eventType === 'DELETE') { if (oldRow?.id) tasks = tasks.filter((t) => t.id !== oldRow.id); }
   render();
   updateStats();
 }
 
-// ---------- listeners ----------
 function attachListeners() {
   if (listenersAttached) return;
   listenersAttached = true;
 
+  initDatePicker(document.getElementById('task-due-date'));
+
   document.querySelectorAll('[data-filter]').forEach((btn) => {
     btn.addEventListener('click', () => {
       filter = btn.dataset.filter;
-      document
-        .querySelectorAll('[data-filter]')
-        .forEach((b) => b.classList.toggle('active', b === btn));
+      document.querySelectorAll('[data-filter]').forEach((b) => b.classList.toggle('active', b === btn));
       render();
     });
   });
@@ -401,9 +326,7 @@ function attachListeners() {
   document.querySelectorAll('[data-priority]').forEach((btn) => {
     btn.addEventListener('click', () => {
       priorityFilter = btn.dataset.priority;
-      document
-        .querySelectorAll('[data-priority]')
-        .forEach((b) => b.classList.toggle('active', b === btn));
+      document.querySelectorAll('[data-priority]').forEach((b) => b.classList.toggle('active', b === btn));
       render();
     });
   });
@@ -428,34 +351,16 @@ function attachListeners() {
   });
 
   document.getElementById('task-form')?.addEventListener('submit', handleTaskSubmit);
-
-  document.querySelectorAll('[data-task-modal-close]').forEach((el) => {
-    el.addEventListener('click', closeTaskModal);
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeTaskModal();
-  });
+  document.querySelectorAll('[data-task-modal-close]').forEach((el) => el.addEventListener('click', closeTaskModal));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeTaskModal(); });
 }
 
-// ---------- public ----------
 export function initTasks(user) {
   if (currentUser?.id === user?.id && user) return;
-
-  if (subscription) {
-    supabase.removeChannel(subscription);
-    subscription = null;
-  }
-
+  if (subscription) { supabase.removeChannel(subscription); subscription = null; }
   currentUser = user;
   tasks = [];
-
-  if (!user) {
-    render();
-    updateStats();
-    return;
-  }
-
+  if (!user) { render(); updateStats(); return; }
   attachListeners();
   loadTasks();
   subscribeToChanges();
