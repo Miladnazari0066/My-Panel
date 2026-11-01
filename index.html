@@ -11,6 +11,8 @@
   <link rel="stylesheet" href="css/variables.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/pages.css">
 </head>
 <body>
   <div id="loading-screen" class="loading-screen">
@@ -25,7 +27,6 @@
       <div class="blob blob-2"></div>
       <div class="blob blob-3"></div>
     </div>
-
     <div class="auth-container">
       <div class="auth-card">
         <div class="auth-logo">
@@ -36,7 +37,6 @@
         </div>
         <h1 class="auth-title" id="auth-title">خوش آمدید</h1>
         <p class="auth-subtitle" id="auth-subtitle">برای ادامه وارد حساب خود شوید</p>
-
         <form class="auth-form" id="auth-form" novalidate>
           <div class="form-group">
             <label class="form-label" for="email">ایمیل</label>
@@ -44,7 +44,6 @@
               <input type="email" id="email" class="input" placeholder="you@example.com" dir="ltr" autocomplete="email" required>
             </div>
           </div>
-
           <div class="form-group">
             <label class="form-label" for="password">رمز عبور</label>
             <div class="input-wrapper">
@@ -54,22 +53,18 @@
               </button>
             </div>
           </div>
-
           <div class="form-group hidden" id="name-group">
             <label class="form-label" for="full-name">نام و نام خانوادگی</label>
             <div class="input-wrapper">
               <input type="text" id="full-name" class="input" placeholder="مثلاً علی رضایی" autocomplete="name">
             </div>
           </div>
-
           <div class="auth-error" id="auth-error"></div>
-
           <button type="submit" class="btn btn-primary btn-block" id="auth-submit">
             <span class="btn-text" id="submit-text">ورود</span>
             <span class="btn-loader hidden" id="submit-loader"></span>
           </button>
         </form>
-
         <div class="auth-switch">
           <span id="switch-hint">حساب ندارید؟</span>
           <button type="button" class="btn-link" id="switch-mode">ثبت‌نام کنید</button>
@@ -78,14 +73,242 @@
     </div>
   </div>
 
-  <!-- اپ اصلی (فاز ۲ اضافه میشه) -->
-  <div id="main-app" class="main-app hidden">
-    <div class="placeholder-screen">
-      <h1>🎉 خوش آمدی!</h1>
-      <p>ورود با موفقیت انجام شد. مرحله بعد: ساختار اصلی اپ.</p>
-      <button class="btn btn-secondary" id="logout-btn">خروج</button>
+  <!-- اپ اصلی -->
+  <div id="main-app" class="app-shell hidden">
+
+    <!-- سایدبار دسکتاپ -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="sidebar-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 11l3 3L22 4"/>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+          </svg>
+        </div>
+        <div class="sidebar-brand-text">
+          <span class="brand-title">مدیریت روزانه</span>
+          <span class="brand-subtitle">برنامه‌ریز هوشمند</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#/dashboard" data-nav="dashboard" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          <span>داشبورد</span>
+        </a>
+        <a href="#/tasks" data-nav="tasks" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 11 12 14 22 4"/>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+          </svg>
+          <span>برنامه امروز</span>
+        </a>
+        <a href="#/loans" data-nav="loans" class="sidebar-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="5" width="20" height="14" rx="2"/>
+            <line x1="2" y1="10" x2="22" y2="10"/>
+          </svg>
+          <span>وام‌ها و اقساط</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button type="button" class="sidebar-link" data-theme-toggle aria-label="تغییر تم">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+          </svg>
+          <svg class="icon-moon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+          <span>تغییر تم</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- بدنه اصلی -->
+    <div class="app-body">
+      <header class="app-header">
+        <h1 class="page-title" id="page-title">داشبورد</h1>
+        <div class="header-actions">
+          <button type="button" class="btn-icon" data-theme-toggle aria-label="تغییر تم">
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="4"/>
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+            </svg>
+            <svg class="icon-moon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+          </button>
+          <div class="user-menu">
+            <button type="button" class="user-avatar" id="user-avatar" aria-label="منوی کاربر">U</button>
+            <div class="user-dropdown" id="user-dropdown">
+              <div class="user-info">
+                <div class="user-avatar-large" id="user-avatar-large">U</div>
+                <div class="user-info-text">
+                  <div class="user-name" id="user-name">کاربر</div>
+                  <div class="user-email" id="user-email">-</div>
+                </div>
+              </div>
+              <div class="dropdown-divider"></div>
+              <button type="button" class="dropdown-item" id="logout-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                  <polyline points="16 17 21 12 16 7"/>
+                  <line x1="21" y1="12" x2="9" y2="12"/>
+                </svg>
+                <span>خروج از حساب</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="app-main">
+        <!-- داشبورد -->
+        <section class="page" data-page="dashboard">
+          <div class="greeting-card">
+            <h2 class="greeting-text" id="greeting-text">سلام 👋</h2>
+            <p class="greeting-date" id="greeting-date"></p>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon stat-icon-purple">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                  <polyline points="22 4 12 14.01 9 11.01"/>
+                </svg>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value">۰</div>
+                <div class="stat-label">تسک‌های امروز</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon stat-icon-cyan">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="5" width="20" height="14" rx="2"/>
+                  <line x1="2" y1="10" x2="22" y2="10"/>
+                </svg>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value">۰</div>
+                <div class="stat-label">وام فعال</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon stat-icon-amber">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+              </div>
+              <div class="stat-content">
+                <div class="stat-value">۰</div>
+                <div class="stat-label">قسط باقی‌مانده</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-header">
+              <h3 class="section-title">وظایف امروز</h3>
+              <a href="#/tasks" class="section-link">مشاهده همه ←</a>
+            </div>
+            <div class="empty-state">
+              <div class="empty-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="9 11 12 14 22 4"/>
+                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                </svg>
+              </div>
+              <p class="empty-title">هنوز تسکی برای امروز نداری</p>
+              <p class="empty-desc">برنامه امروزت رو منظم کن</p>
+              <button type="button" class="btn btn-primary btn-sm" data-toast="ماژول تسک‌ها به زودی فعال می‌شود ✨">افزودن تسک</button>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-header">
+              <h3 class="section-title">وام‌ها و اقساط</h3>
+              <a href="#/loans" class="section-link">مشاهده همه ←</a>
+            </div>
+            <div class="empty-state">
+              <div class="empty-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="5" width="20" height="14" rx="2"/>
+                  <line x1="2" y1="10" x2="22" y2="10"/>
+                </svg>
+              </div>
+              <p class="empty-title">وامی ثبت نکردی</p>
+              <p class="empty-desc">وام‌هات رو اضافه کن و اقساط رو پیگیری کن</p>
+              <button type="button" class="btn btn-primary btn-sm" data-toast="ماژول وام‌ها به زودی فعال می‌شود ✨">افزودن وام</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- صفحه برنامه امروز -->
+        <section class="page hidden" data-page="tasks">
+          <div class="page-placeholder">
+            <div class="placeholder-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 11 12 14 22 4"/>
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+              </svg>
+            </div>
+            <h2>برنامه امروز</h2>
+            <p>ماژول تسک‌ها در مرحله بعدی فعال می‌شود</p>
+          </div>
+        </section>
+
+        <!-- صفحه وام‌ها -->
+        <section class="page hidden" data-page="loans">
+          <div class="page-placeholder">
+            <div class="placeholder-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="5" width="20" height="14" rx="2"/>
+                <line x1="2" y1="10" x2="22" y2="10"/>
+              </svg>
+            </div>
+            <h2>وام‌ها و اقساط</h2>
+            <p>ماژول وام‌ها در مرحله بعدی فعال می‌شود</p>
+          </div>
+        </section>
+      </main>
+
+      <nav class="bottom-nav">
+        <a href="#/dashboard" data-nav="dashboard" class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          <span>داشبورد</span>
+        </a>
+        <a href="#/tasks" data-nav="tasks" class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 11 12 14 22 4"/>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+          </svg>
+          <span>برنامه</span>
+        </a>
+        <a href="#/loans" data-nav="loans" class="nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="5" width="20" height="14" rx="2"/>
+            <line x1="2" y1="10" x2="22" y2="10"/>
+          </svg>
+          <span>وام‌ها</span>
+        </a>
+      </nav>
     </div>
   </div>
+
+  <div id="toast-container" class="toast-container"></div>
 
   <script type="module" src="js/app.js"></script>
 </body>
