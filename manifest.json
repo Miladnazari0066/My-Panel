@@ -1,7 +1,7 @@
 {
-  "name": "مدیریت روزانه",
-  "short_name": "مدیریت",
-  "description": "برنامه‌ریز هوشمند تسک‌ها و اقساط وام",
+  "name": "My Task by Milad",
+  "short_name": "My Task",
+  "description": "برنامه‌ریز هوشمند تسک‌ها و اقساط وام — My Task by Milad",
   "lang": "fa",
   "dir": "rtl",
   "start_url": "./",
