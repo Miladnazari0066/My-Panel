@@ -3,6 +3,7 @@ import { initAuth } from './auth.js';
 import { initTheme } from './theme.js';
 import { initRouter } from './router.js';
 import { initToastDelegation } from './ui.js';
+import { initTasks } from './tasks.js';
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -25,7 +26,10 @@ function showAuth() {
 function showMain(user) {
   authScreen.classList.add('hidden');
   mainApp.classList.remove('hidden');
-  if (user) updateUserUI(user);
+  if (user) {
+    updateUserUI(user);
+    initTasks(user);
+  }
   if (navigate) navigate();
 }
 
@@ -138,6 +142,7 @@ async function bootstrap() {
     if (event === 'SIGNED_IN' && newSession) {
       showMain(newSession.user);
     } else if (event === 'SIGNED_OUT') {
+      initTasks(null);
       showAuth();
     } else if (event === 'TOKEN_REFRESHED' && newSession) {
       updateUserUI(newSession.user);
