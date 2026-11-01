@@ -36,6 +36,7 @@
     <p class="loading-text">در حال بارگذاری...</p>
   </div>
 
+  <!-- صفحه ورود -->
   <div id="auth-screen" class="auth-screen hidden">
     <div class="auth-bg">
       <div class="blob blob-1"></div>
@@ -73,7 +74,7 @@
           <div class="form-group hidden" id="name-group">
             <label class="form-label" for="full-name">نام و نام خانوادگی</label>
             <div class="input-wrapper">
-              <input type="text" id="full-name" class="input" placeholder="مثلاً علی رضایی" autocomplete="name">
+              <input type="text" id="full-name" class="input" placeholder="مثلاً میلاد نظری" autocomplete="name">
             </div>
           </div>
           <div class="auth-error" id="auth-error"></div>
@@ -90,8 +91,8 @@
     </div>
   </div>
 
+  <!-- اپ اصلی -->
   <div id="main-app" class="app-shell hidden">
-
     <aside class="sidebar">
       <div class="sidebar-brand">
         <div class="sidebar-logo">
@@ -128,7 +129,7 @@
           <span>وام‌ها و اقساط</span>
         </a>
       </nav>
-
+      
       <div class="sidebar-footer">
         <button type="button" class="sidebar-link" data-theme-toggle aria-label="تغییر تم">
           <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -157,12 +158,12 @@
             </svg>
           </button>
           <div class="user-menu">
-            <button type="button" class="user-avatar" id="user-avatar" aria-label="منوی کاربر">U</button>
+            <button type="button" class="user-avatar" id="user-avatar" aria-label="منوی کاربر">M</button>
             <div class="user-dropdown" id="user-dropdown">
               <div class="user-info">
-                <div class="user-avatar-large" id="user-avatar-large">U</div>
+                <div class="user-avatar-large" id="user-avatar-large">M</div>
                 <div class="user-info-text">
-                  <div class="user-name" id="user-name">کاربر</div>
+                  <div class="user-name" id="user-name">میلاد</div>
                   <div class="user-email" id="user-email">-</div>
                 </div>
               </div>
@@ -181,6 +182,7 @@
       </header>
 
       <main class="app-main">
+        <!-- داشبورد -->
         <section class="page" data-page="dashboard">
           <div class="greeting-card">
             <h2 class="greeting-text" id="greeting-text">سلام 👋</h2>
@@ -285,6 +287,7 @@
           </div>
         </section>
 
+        <!-- برنامه امروز -->
         <section class="page hidden" data-page="tasks">
           <div class="tasks-toolbar">
             <div class="filter-tabs">
@@ -330,6 +333,7 @@
           </button>
         </section>
 
+        <!-- وام‌ها -->
         <section class="page hidden" data-page="loans">
           <div class="loans-toolbar">
             <div class="loans-summary hidden" id="loans-summary">
@@ -408,6 +412,7 @@
 
   <div id="toast-container" class="toast-container"></div>
 
+  <!-- مودال تسک -->
   <div class="modal-backdrop" id="task-modal-backdrop" data-task-modal-close></div>
   <div class="modal" id="task-modal" role="dialog" aria-modal="true" aria-labelledby="task-modal-title">
     <div class="modal-header">
@@ -456,6 +461,7 @@
     </form>
   </div>
 
+  <!-- مودال تایید -->
   <div class="modal-backdrop" id="confirm-backdrop"></div>
   <div class="modal modal-small" id="confirm-modal" role="dialog" aria-modal="true">
     <div class="modal-body modal-body-center">
@@ -475,6 +481,7 @@
     </div>
   </div>
 
+  <!-- مودال وام (با انتخاب بانک) -->
   <div class="modal-backdrop" id="loan-modal-backdrop" data-loan-modal-close></div>
   <div class="modal" id="loan-modal" role="dialog" aria-modal="true" aria-labelledby="loan-modal-title">
     <div class="modal-header">
@@ -489,10 +496,20 @@
     <form id="loan-form">
       <div class="modal-body">
         <input type="hidden" id="loan-id">
-        <div class="form-group">
-          <label class="form-label" for="loan-title">عنوان وام <span class="required">*</span></label>
-          <input type="text" id="loan-title" class="input" required maxlength="200" placeholder="مثلاً وام مسکن">
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="loan-bank">بانک عامل <span class="required">*</span></label>
+            <select id="loan-bank" class="input" required>
+              <!-- گزینه‌ها با جاوااسکریپت پر می‌شوند -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="loan-title">عنوان وام <span class="required">*</span></label>
+            <input type="text" id="loan-title" class="input" required maxlength="200" placeholder="مثلاً وام مسکن">
+          </div>
         </div>
+
         <div class="form-row">
           <div class="form-group">
             <label class="form-label" for="loan-total-amount">مبلغ کل (تومان) <span class="required">*</span></label>
@@ -512,10 +529,6 @@
           <label class="form-label" for="loan-start-date">تاریخ اولین قسط <span class="required">*</span></label>
           <input type="date" id="loan-start-date" class="input" dir="ltr" required>
         </div>
-        <div class="form-group">
-          <label class="form-label" for="loan-note">یادداشت</label>
-          <textarea id="loan-note" class="input" rows="2" maxlength="500" placeholder="توضیحات (اختیاری)"></textarea>
-        </div>
         <div class="modal-error hidden" id="loan-modal-error"></div>
       </div>
       <div class="modal-footer">
@@ -528,6 +541,7 @@
     </form>
   </div>
 
+  <!-- مودال ثبت پرداخت -->
   <div class="modal-backdrop" id="payment-modal-backdrop" data-payment-modal-close></div>
   <div class="modal" id="payment-modal" role="dialog" aria-modal="true" aria-labelledby="payment-modal-title">
     <div class="modal-header">
@@ -553,10 +567,6 @@
           <label class="form-label" for="payment-paid-at">تاریخ پرداخت <span class="required">*</span></label>
           <input type="date" id="payment-paid-at" class="input" dir="ltr" required>
         </div>
-        <div class="form-group">
-          <label class="form-label" for="payment-note">یادداشت</label>
-          <textarea id="payment-note" class="input" rows="2" maxlength="500" placeholder="اختیاری"></textarea>
-        </div>
         <div class="modal-error hidden" id="payment-modal-error"></div>
       </div>
       <div class="modal-footer">
@@ -569,6 +579,7 @@
     </form>
   </div>
 
+  <!-- مودال تاریخچه -->
   <div class="modal-backdrop" id="payments-history-backdrop" data-payments-history-close></div>
   <div class="modal" id="payments-history-modal" role="dialog" aria-modal="true" aria-labelledby="payments-history-title">
     <div class="modal-header">
