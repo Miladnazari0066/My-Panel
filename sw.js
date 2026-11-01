@@ -1,4 +1,4 @@
-const CACHE_NAME = 'daily-manager-v1';
+const CACHE_NAME = 'my-task-milad-v1';
 const OFFLINE_URL = new URL('./offline.html', self.location.href).href;
 
 self.addEventListener('install', (event) => {
