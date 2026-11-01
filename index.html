@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="css/pages.css">
   <link rel="stylesheet" href="css/modal.css">
   <link rel="stylesheet" href="css/tasks.css">
+  <link rel="stylesheet" href="css/loans.css">
 </head>
 <body>
   <div id="loading-screen" class="loading-screen">
@@ -198,7 +199,7 @@
                 </svg>
               </div>
               <div class="stat-content">
-                <div class="stat-value">۰</div>
+                <div class="stat-value" data-stat="active-loans">۰</div>
                 <div class="stat-label">وام فعال</div>
               </div>
             </div>
@@ -212,7 +213,7 @@
                 </svg>
               </div>
               <div class="stat-content">
-                <div class="stat-value">۰</div>
+                <div class="stat-value" data-stat="remaining-installments">۰</div>
                 <div class="stat-label">قسط باقی‌مانده</div>
               </div>
             </div>
@@ -232,7 +233,7 @@
               </div>
               <p class="empty-title">هنوز تسکی برای امروز نداری</p>
               <p class="empty-desc">برنامه امروزت رو منظم کن</p>
-              <button type="button" class="btn btn-primary btn-sm" data-toast="برای افزودن تسک به تب برنامه برو ✨">افزودن تسک</button>
+              <a href="#/tasks" class="btn btn-primary btn-sm">رفتن به برنامه امروز</a>
             </div>
           </div>
 
@@ -241,7 +242,8 @@
               <h3 class="section-title">وام‌ها و اقساط</h3>
               <a href="#/loans" class="section-link">مشاهده همه ←</a>
             </div>
-            <div class="empty-state">
+            <div id="dashboard-loans-list" class="dashboard-loans-list"></div>
+            <div class="empty-state" id="dashboard-loans-empty">
               <div class="empty-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <rect x="2" y="5" width="20" height="14" rx="2"/>
@@ -250,7 +252,7 @@
               </div>
               <p class="empty-title">وامی ثبت نکردی</p>
               <p class="empty-desc">وام‌هات رو اضافه کن و اقساط رو پیگیری کن</p>
-              <button type="button" class="btn btn-primary btn-sm" data-toast="ماژول وام‌ها در مرحله بعدی فعال می‌شود ✨">افزودن وام</button>
+              <a href="#/loans" class="btn btn-primary btn-sm">افزودن وام</a>
             </div>
           </div>
         </section>
@@ -303,16 +305,52 @@
 
         <!-- صفحه وام‌ها -->
         <section class="page hidden" data-page="loans">
-          <div class="page-placeholder">
-            <div class="placeholder-icon">
+          <div class="loans-toolbar">
+            <div class="loans-summary hidden" id="loans-summary">
+              <div class="loans-summary-item">
+                <div class="loans-summary-label">کل بدهی</div>
+                <div class="loans-summary-value" id="summary-total">۰</div>
+              </div>
+              <div class="loans-summary-item">
+                <div class="loans-summary-label">پرداخت شده</div>
+                <div class="loans-summary-value loans-summary-paid" id="summary-paid">۰</div>
+              </div>
+              <div class="loans-summary-item">
+                <div class="loans-summary-label">باقی‌مانده</div>
+                <div class="loans-summary-value loans-summary-remaining" id="summary-remaining">۰</div>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary btn-sm" data-open-loan-modal>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              <span>وام جدید</span>
+            </button>
+          </div>
+
+          <div class="loans-list" id="loans-list"></div>
+
+          <div class="loans-empty hidden" id="loans-empty">
+            <div class="empty-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="5" width="20" height="14" rx="2"/>
                 <line x1="2" y1="10" x2="22" y2="10"/>
               </svg>
             </div>
-            <h2>وام‌ها و اقساط</h2>
-            <p>ماژول وام‌ها در مرحله بعدی فعال می‌شود</p>
+            <p class="empty-title">هنوز وامی ثبت نکردی</p>
+            <p class="empty-desc">اولین وامت رو اضافه کن تا اقساط رو پیگیری کنی</p>
+            <button type="button" class="btn btn-primary btn-sm" data-open-loan-modal>
+              افزودن اولین وام
+            </button>
           </div>
+
+          <button type="button" class="fab" data-open-loan-modal aria-label="افزودن وام">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
         </section>
       </main>
 
@@ -404,12 +442,126 @@
           <line x1="12" y1="17" x2="12.01" y2="17"/>
         </svg>
       </div>
-      <h2 id="confirm-title">حذف تسک</h2>
+      <h2 id="confirm-title">حذف</h2>
       <p id="confirm-message" class="confirm-message">آیا مطمئنی؟</p>
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" id="confirm-cancel">انصراف</button>
       <button type="button" class="btn btn-danger" id="confirm-ok">حذف</button>
+    </div>
+  </div>
+
+  <!-- مودال وام -->
+  <div class="modal-backdrop" id="loan-modal-backdrop" data-loan-modal-close></div>
+  <div class="modal" id="loan-modal" role="dialog" aria-modal="true" aria-labelledby="loan-modal-title">
+    <div class="modal-header">
+      <h2 id="loan-modal-title">وام جدید</h2>
+      <button type="button" class="btn-icon" data-loan-modal-close aria-label="بستن">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <form id="loan-form">
+      <div class="modal-body">
+        <input type="hidden" id="loan-id">
+        <div class="form-group">
+          <label class="form-label" for="loan-title">عنوان وام <span class="required">*</span></label>
+          <input type="text" id="loan-title" class="input" required maxlength="200" placeholder="مثلاً وام مسکن">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="loan-total-amount">مبلغ کل (تومان) <span class="required">*</span></label>
+            <input type="number" id="loan-total-amount" class="input" dir="ltr" min="1" step="1" required placeholder="12000000">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="loan-total-installments">تعداد اقساط <span class="required">*</span></label>
+            <input type="number" id="loan-total-installments" class="input" dir="ltr" min="1" step="1" required placeholder="12">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="loan-installment-amount">مبلغ هر قسط (تومان)</label>
+          <input type="number" id="loan-installment-amount" class="input" dir="ltr" min="0" step="1" placeholder="خالی بذاری خودکار حساب می‌شه">
+          <small class="form-hint">اگر خالی باشد: مبلغ کل ÷ تعداد اقساط</small>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="loan-start-date">تاریخ اولین قسط <span class="required">*</span></label>
+          <input type="date" id="loan-start-date" class="input" dir="ltr" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="loan-note">یادداشت</label>
+          <textarea id="loan-note" class="input" rows="2" maxlength="500" placeholder="توضیحات (اختیاری)"></textarea>
+        </div>
+        <div class="modal-error hidden" id="loan-modal-error"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-loan-modal-close>انصراف</button>
+        <button type="submit" class="btn btn-primary" id="loan-submit-btn">
+          <span class="btn-text">ذخیره</span>
+          <span class="btn-loader hidden"></span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- مودال ثبت پرداخت -->
+  <div class="modal-backdrop" id="payment-modal-backdrop" data-payment-modal-close></div>
+  <div class="modal" id="payment-modal" role="dialog" aria-modal="true" aria-labelledby="payment-modal-title">
+    <div class="modal-header">
+      <h2 id="payment-modal-title">ثبت پرداخت قسط</h2>
+      <button type="button" class="btn-icon" data-payment-modal-close aria-label="بستن">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <form id="payment-form">
+      <div class="modal-body">
+        <div class="payment-loan-info">
+          <div class="payment-loan-name" id="payment-loan-title">-</div>
+          <div class="payment-loan-progress" id="payment-info">-</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="payment-amount">مبلغ (تومان) <span class="required">*</span></label>
+          <input type="number" id="payment-amount" class="input" dir="ltr" min="1" step="1" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="payment-paid-at">تاریخ پرداخت <span class="required">*</span></label>
+          <input type="date" id="payment-paid-at" class="input" dir="ltr" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="payment-note">یادداشت</label>
+          <textarea id="payment-note" class="input" rows="2" maxlength="500" placeholder="اختیاری"></textarea>
+        </div>
+        <div class="modal-error hidden" id="payment-modal-error"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-payment-modal-close>انصراف</button>
+        <button type="submit" class="btn btn-primary" id="payment-submit-btn">
+          <span class="btn-text">ثبت پرداخت</span>
+          <span class="btn-loader hidden"></span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- مودال تاریخچه پرداخت‌ها -->
+  <div class="modal-backdrop" id="payments-history-backdrop" data-payments-history-close></div>
+  <div class="modal" id="payments-history-modal" role="dialog" aria-modal="true" aria-labelledby="payments-history-title">
+    <div class="modal-header">
+      <h2 id="payments-history-title">تاریخچه پرداخت‌ها</h2>
+      <button type="button" class="btn-icon" data-payments-history-close aria-label="بستن">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body payments-history-body" id="payments-history-body"></div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-payments-history-close>بستن</button>
     </div>
   </div>
 
