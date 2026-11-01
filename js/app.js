@@ -5,6 +5,7 @@ import { initRouter } from './router.js';
 import { initToastDelegation } from './ui.js';
 import { initTasks } from './tasks.js';
 import { initLoans } from './loans.js';
+import { initDashboard } from './dashboard.js';
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -31,6 +32,7 @@ function showMain(user) {
     updateUserUI(user);
     initTasks(user);
     initLoans(user);
+    initDashboard(user);
   }
   if (navigate) navigate();
 }
@@ -140,6 +142,7 @@ async function bootstrap() {
     } else if (event === 'SIGNED_OUT') {
       initTasks(null);
       initLoans(null);
+      initDashboard(null);
       showAuth();
     } else if (event === 'TOKEN_REFRESHED' && newSession) {
       updateUserUI(newSession.user);
