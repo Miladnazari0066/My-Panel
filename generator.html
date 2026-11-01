@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ساخت لوگو — My Task</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
+    background:#0a0a0f;color:#fff;padding:24px;
+    min-height:100vh;display:flex;flex-direction:column;
+    align-items:center;gap:20px;
+  }
+  h1{font-size:20px;text-align:center}
+  p{text-align:center;color:#a0a0b0;font-size:14px;max-width:400px;line-height:1.7}
+  .grid{
+    display:grid;grid-template-columns:repeat(2,1fr);
+    gap:16px;width:100%;max-width:400px;
+  }
+  .card{
+    background:#15151e;border-radius:16px;padding:16px;
+    display:flex;flex-direction:column;align-items:center;gap:10px;
+    border:1px solid rgba(255,255,255,0.06);
+  }
+  .card img{width:80px;height:80px;border-radius:18px}
+  .card .label{font-size:12px;color:#a0a0b0}
+  .card button{
+    padding:10px 16px;border-radius:10px;border:none;
+    background:linear-gradient(135deg,#7c5cff,#22d3ee);
+    color:#fff;font-weight:600;font-size:13px;cursor:pointer;
+    width:100%;font-family:inherit;
+    transition:transform .15s;
+  }
+  .card button:active{transform:scale(0.97)}
+  .success{
+    background:rgba(16,185,129,0.1);color:#10b981;
+    padding:12px 16px;border-radius:10px;font-size:13px;
+    text-align:center;margin-top:8px;border:1px solid rgba(16,185,129,0.25);
+    max-width:400px;
+  }
+  ol{
+    color:#a0a0b0;font-size:14px;line-height:2;padding-right:20px;
+    max-width:400px;
+  }
+  ol li{padding-right:4px}
+  code{
+    background:#15151e;padding:2px 8px;border-radius:6px;
+    font-size:12px;color:#7c5cff;direction:ltr;display:inline-block;
+  }
+  h2{font-size:16px;margin-bottom:4px;margin-top:8px;text-align:center}
+</style>
+</head>
+<body>
+  <h1>🎨 ساخت لوگو</h1>
+  <p>روی هر دکمه بزن تا فایل PNG دانلود بشه. بعد طبق مراحل پایین عمل کن.</p>
+
+  <div class="grid" id="grid"></div>
+  <div class="success" id="status" style="display:none">
+    ✅ دانلود شد! حالا برو مرحله ۲
+  </div>
+
+  <div style="width:100%;max-width:400px;margin-top:16px">
+    <h2>بعد از دانلود:</h2>
+    <ol>
+      <li>هر ۴ فایل PNG رو توی پوشه <code>icons</code> ریپو آپلود کن</li>
+      <li>فایل‌های <code>manifest.json</code> و <code>index.html</code> رو آپدیت کن</li>
+      <li>کش مرورگر گوشی رو پاک کن (Settings → Privacy → Clear browsing data)</li>
+      <li>اپ قدیمی رو از صفحه اصلی حذف کن و از اول Add to Home Screen بزن</li>
+    </ol>
+  </div>
+
+<script>
+function drawIcon(size) {
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = size;
+  const ctx = canvas.getContext('2d');
+
+  const radius = size * 0.23;
+
+  const grad = ctx.createLinearGradient(0, 0, size, size);
+  grad.addColorStop(0, '#7c5cff');
+  grad.addColorStop(0.55, '#5b3fd6');
+  grad.addColorStop(1, '#22d3ee');
+  ctx.fillStyle = grad;
+  roundRect(ctx, 0, 0, size, size, radius);
+  ctx.fill();
+
+  const shine = ctx.createLinearGradient(0, 0, 0, size * 0.43);
+  shine.addColorStop(0, 'rgba(255,255,255,0.25)');
+  shine.addColorStop(1, 'rgba(255,255,255,0)');
+  ctx.fillStyle = shine;
+  roundRect(ctx, 0, 0, size, size * 0.43, radius);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(size / 2, size / 2, size * 0.29, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,255,255,0.08)';
+  ctx.fill();
+
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = size * 0.10;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  ctx.moveTo(size * 0.30, size * 0.52);
+  ctx.lineTo(size * 0.44, size * 0.66);
+  ctx.lineTo(size * 0.72, size * 0.36);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(size * 0.75, size * 0.27, size * 0.03, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.fill();
+
+  return canvas;
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+const files = [
+  { size: 192, name: 'android-chrome-192x192.png', label: '۱۹۲×۱۹۲' },
+  { size: 512, name: 'android-chrome-512x512.png', label: '۵۱۲×۵۱۲' },
+  { size: 180, name: 'apple-touch-icon.png', label: '۱۸۰×۱۸۰ (iOS)' },
+  { size: 32,  name: 'favicon-32x32.png', label: '۳۲×۳۲ (تب)' },
+];
+
+const grid = document.getElementById('grid');
+
+files.forEach((f) => {
+  const canvas = drawIcon(f.size);
+  const card = document.createElement('div');
+  card.className = 'card';
+
+  const preview = document.createElement('img');
+  preview.src = canvas.toDataURL('image/png');
+  preview.alt = f.name;
+
+  const label = document.createElement('div');
+  label.className = 'label';
+  label.textContent = f.label;
+
+  const btn = document.createElement('button');
+  btn.textContent = 'دانلود ' + f.label;
+  btn.onclick = () => {
+    canvas.toBlob((blob) => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = f.name;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(a.href), 30000);
+      document.getElementById('status').style.display = 'block';
+    }, 'image/png');
+  };
+
+  card.appendChild(preview);
+  card.appendChild(label);
+  card.appendChild(btn);
+  grid.appendChild(card);
+});
+</script>
+</body>
+</html>
