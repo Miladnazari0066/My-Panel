@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0a0f">
+  <title>مدیریت روزانه</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+  <div id="loading-screen" class="loading-screen">
+    <div class="loader-ring"></div>
+    <p class="loading-text">در حال بارگذاری...</p>
+  </div>
+
+  <!-- صفحه ورود / ثبت‌نام -->
+  <div id="auth-screen" class="auth-screen hidden">
+    <div class="auth-bg">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+    </div>
+
+    <div class="auth-container">
+      <div class="auth-card">
+        <div class="auth-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 11l3 3L22 4"/>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+          </svg>
+        </div>
+        <h1 class="auth-title" id="auth-title">خوش آمدید</h1>
+        <p class="auth-subtitle" id="auth-subtitle">برای ادامه وارد حساب خود شوید</p>
+
+        <form class="auth-form" id="auth-form" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="email">ایمیل</label>
+            <div class="input-wrapper">
+              <input type="email" id="email" class="input" placeholder="you@example.com" dir="ltr" autocomplete="email" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password">رمز عبور</label>
+            <div class="input-wrapper">
+              <input type="password" id="password" class="input" placeholder="••••••••" dir="ltr" autocomplete="current-password" required minlength="6">
+              <button type="button" class="input-action" id="toggle-password" aria-label="نمایش رمز">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group hidden" id="name-group">
+            <label class="form-label" for="full-name">نام و نام خانوادگی</label>
+            <div class="input-wrapper">
+              <input type="text" id="full-name" class="input" placeholder="مثلاً علی رضایی" autocomplete="name">
+            </div>
+          </div>
+
+          <div class="auth-error" id="auth-error"></div>
+
+          <button type="submit" class="btn btn-primary btn-block" id="auth-submit">
+            <span class="btn-text" id="submit-text">ورود</span>
+            <span class="btn-loader hidden" id="submit-loader"></span>
+          </button>
+        </form>
+
+        <div class="auth-switch">
+          <span id="switch-hint">حساب ندارید؟</span>
+          <button type="button" class="btn-link" id="switch-mode">ثبت‌نام کنید</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- اپ اصلی (فاز ۲ اضافه میشه) -->
+  <div id="main-app" class="main-app hidden">
+    <div class="placeholder-screen">
+      <h1>🎉 خوش آمدی!</h1>
+      <p>ورود با موفقیت انجام شد. مرحله بعد: ساختار اصلی اپ.</p>
+      <button class="btn btn-secondary" id="logout-btn">خروج</button>
+    </div>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
