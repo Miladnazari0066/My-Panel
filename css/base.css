@@ -71,6 +71,16 @@ img, svg { display: block; max-width: 100%; }
 }
 .btn-secondary:hover:not(:disabled) { background: var(--surface-3); }
 
+.btn-danger {
+  background: var(--danger);
+  color: white;
+}
+.btn-danger:hover:not(:disabled) {
+  background: #dc2626;
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.4);
+  transform: translateY(-1px);
+}
+
 .btn-block { width: 100%; }
 
 .btn-link {
