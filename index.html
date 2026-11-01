@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="css/modal.css">
   <link rel="stylesheet" href="css/tasks.css">
   <link rel="stylesheet" href="css/loans.css">
+  <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
   <div id="loading-screen" class="loading-screen">
@@ -23,7 +24,6 @@
     <p class="loading-text">در حال بارگذاری...</p>
   </div>
 
-  <!-- صفحه ورود / ثبت‌نام -->
   <div id="auth-screen" class="auth-screen hidden">
     <div class="auth-bg">
       <div class="blob blob-1"></div>
@@ -76,10 +76,8 @@
     </div>
   </div>
 
-  <!-- اپ اصلی -->
   <div id="main-app" class="app-shell hidden">
 
-    <!-- سایدبار دسکتاپ -->
     <aside class="sidebar">
       <div class="sidebar-brand">
         <div class="sidebar-logo">
@@ -132,7 +130,6 @@
       </div>
     </aside>
 
-    <!-- بدنه اصلی -->
     <div class="app-body">
       <header class="app-header">
         <h1 class="page-title" id="page-title">داشبورد</h1>
@@ -171,11 +168,22 @@
       </header>
 
       <main class="app-main">
-        <!-- داشبورد -->
         <section class="page" data-page="dashboard">
           <div class="greeting-card">
             <h2 class="greeting-text" id="greeting-text">سلام 👋</h2>
             <p class="greeting-date" id="greeting-date"></p>
+          </div>
+
+          <div class="insight-banner hidden" id="insight-banner">
+            <div class="insight-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>
+              </svg>
+            </div>
+            <div class="insight-content">
+              <div class="insight-title" id="insight-title">-</div>
+              <div class="insight-desc" id="insight-desc">-</div>
+            </div>
           </div>
 
           <div class="stats-grid">
@@ -221,43 +229,49 @@
 
           <div class="section-card">
             <div class="section-header">
-              <h3 class="section-title">وظایف امروز</h3>
-              <a href="#/tasks" class="section-link">مشاهده همه ←</a>
+              <h3 class="section-title">فعالیت هفته</h3>
+              <span class="section-badge" id="weekly-total">۰</span>
             </div>
-            <div class="empty-state">
-              <div class="empty-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="9 11 12 14 22 4"/>
-                  <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
-                </svg>
+            <div class="weekly-chart" id="weekly-chart"></div>
+          </div>
+
+          <div class="dashboard-two-col">
+            <div class="section-card">
+              <div class="section-header">
+                <h3 class="section-title">وظایف امروز</h3>
+                <a href="#/tasks" class="section-link">مشاهده ←</a>
               </div>
-              <p class="empty-title">هنوز تسکی برای امروز نداری</p>
-              <p class="empty-desc">برنامه امروزت رو منظم کن</p>
-              <a href="#/tasks" class="btn btn-primary btn-sm">رفتن به برنامه امروز</a>
+              <div id="dashboard-tasks-preview" class="dashboard-tasks-preview"></div>
+              <div class="empty-state empty-state-small hidden" id="dashboard-tasks-empty">
+                <p class="empty-title" id="dashboard-tasks-empty-text">تسکی برای امروز نداری</p>
+                <a href="#/tasks" class="btn btn-primary btn-sm">افزودن تسک</a>
+              </div>
+            </div>
+
+            <div class="section-card">
+              <div class="section-header">
+                <h3 class="section-title">پیش‌رو</h3>
+              </div>
+              <div id="dashboard-upcoming" class="dashboard-upcoming"></div>
+              <div class="empty-state empty-state-small hidden" id="dashboard-upcoming-empty">
+                <p class="empty-title">چیز خاصی در پیش نداری ✨</p>
+              </div>
             </div>
           </div>
 
           <div class="section-card">
             <div class="section-header">
               <h3 class="section-title">وام‌ها و اقساط</h3>
-              <a href="#/loans" class="section-link">مشاهده همه ←</a>
+              <a href="#/loans" class="section-link">مشاهده ←</a>
             </div>
             <div id="dashboard-loans-list" class="dashboard-loans-list"></div>
-            <div class="empty-state" id="dashboard-loans-empty">
-              <div class="empty-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="2" y="5" width="20" height="14" rx="2"/>
-                  <line x1="2" y1="10" x2="22" y2="10"/>
-                </svg>
-              </div>
+            <div class="empty-state empty-state-small hidden" id="dashboard-loans-empty">
               <p class="empty-title">وامی ثبت نکردی</p>
-              <p class="empty-desc">وام‌هات رو اضافه کن و اقساط رو پیگیری کن</p>
               <a href="#/loans" class="btn btn-primary btn-sm">افزودن وام</a>
             </div>
           </div>
         </section>
 
-        <!-- صفحه برنامه امروز -->
         <section class="page hidden" data-page="tasks">
           <div class="tasks-toolbar">
             <div class="filter-tabs">
@@ -303,7 +317,6 @@
           </button>
         </section>
 
-        <!-- صفحه وام‌ها -->
         <section class="page hidden" data-page="loans">
           <div class="loans-toolbar">
             <div class="loans-summary hidden" id="loans-summary">
@@ -382,7 +395,6 @@
 
   <div id="toast-container" class="toast-container"></div>
 
-  <!-- مودال تسک -->
   <div class="modal-backdrop" id="task-modal-backdrop" data-task-modal-close></div>
   <div class="modal" id="task-modal" role="dialog" aria-modal="true" aria-labelledby="task-modal-title">
     <div class="modal-header">
@@ -431,7 +443,6 @@
     </form>
   </div>
 
-  <!-- مودال تایید -->
   <div class="modal-backdrop" id="confirm-backdrop"></div>
   <div class="modal modal-small" id="confirm-modal" role="dialog" aria-modal="true">
     <div class="modal-body modal-body-center">
@@ -451,7 +462,6 @@
     </div>
   </div>
 
-  <!-- مودال وام -->
   <div class="modal-backdrop" id="loan-modal-backdrop" data-loan-modal-close></div>
   <div class="modal" id="loan-modal" role="dialog" aria-modal="true" aria-labelledby="loan-modal-title">
     <div class="modal-header">
@@ -505,7 +515,6 @@
     </form>
   </div>
 
-  <!-- مودال ثبت پرداخت -->
   <div class="modal-backdrop" id="payment-modal-backdrop" data-payment-modal-close></div>
   <div class="modal" id="payment-modal" role="dialog" aria-modal="true" aria-labelledby="payment-modal-title">
     <div class="modal-header">
@@ -547,7 +556,6 @@
     </form>
   </div>
 
-  <!-- مودال تاریخچه پرداخت‌ها -->
   <div class="modal-backdrop" id="payments-history-backdrop" data-payments-history-close></div>
   <div class="modal" id="payments-history-modal" role="dialog" aria-modal="true" aria-labelledby="payments-history-title">
     <div class="modal-header">
