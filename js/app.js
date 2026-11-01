@@ -7,6 +7,7 @@ import { initTasks } from './tasks.js';
 import { initLoans } from './loans.js';
 import { initDashboard } from './dashboard.js';
 import { initPWA } from './pwa.js';
+import { setupDatePickerDOM } from './datepicker.js';
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -112,6 +113,7 @@ function setupUserMenu() {
 async function bootstrap() {
   initTheme();
   initPWA();
+  setupDatePickerDOM();
   initAuth();
   initToastDelegation();
   setupUserMenu();
