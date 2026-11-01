@@ -1,6 +1,7 @@
 import { supabase } from './supabase.js';
 import { showToast } from './ui.js';
 import { confirmDialog } from './modal.js';
+import { initDatePicker } from './datepicker.js';
 
 let currentUser = null;
 let loans = [];
@@ -10,7 +11,6 @@ let loansSubscription = null;
 let paymentsSubscription = null;
 let activePaymentLoanId = null;
 
-// --- لیست بانک‌های ایرانی با رنگ اختصاصی ---
 const IRANIAN_BANKS = [
   { id: 'melli', name: 'بانک ملی', color: 'linear-gradient(135deg, #ef4444, #b91c1c)', short: 'مل' },
   { id: 'mellat', name: 'بانک ملت', color: 'linear-gradient(135deg, #e11d48, #881337)', short: 'م' },
@@ -26,7 +26,6 @@ const IRANIAN_BANKS = [
   { id: 'other', name: 'سایر بانک‌ها', color: 'linear-gradient(135deg, #64748b, #334155)', short: 'ب' }
 ];
 
-// ---------- utils ----------
 function escapeHtml(str) {
   if (str == null) return '';
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
@@ -102,12 +101,10 @@ function dueText(data) {
   return formatPersianDate(data.nextDate);
 }
 
-// پیدا کردن اطلاعات بانک
 function getBankInfo(bankId) {
   return IRANIAN_BANKS.find(b => b.id === bankId) || IRANIAN_BANKS[IRANIAN_BANKS.length - 1];
 }
 
-// ---------- render ----------
 function renderLoanCard(loan, index) {
   const d = computeLoanData(loan);
   const bank = getBankInfo(loan.bank_id);
@@ -239,7 +236,6 @@ function updateStatsCards() {
   if (remEl) remEl.textContent = toPersianNum(remainingInstallments);
 }
 
-// ---------- data ----------
 async function loadLoans() {
   if (!currentUser) return;
   const [loansRes, paymentsRes] = await Promise.all([
@@ -253,7 +249,6 @@ async function loadLoans() {
   render();
 }
 
-// ---------- loan modal ----------
 function openLoanModal(loan = null) {
   const modal = document.getElementById('loan-modal');
   const backdrop = document.getElementById('loan-modal-backdrop');
@@ -270,7 +265,6 @@ function openLoanModal(loan = null) {
   if (!modal) return;
   errorEl.textContent = ''; errorEl.classList.add('hidden');
 
-  // پر کردن سلکت بانک
   bankSelect.innerHTML = IRANIAN_BANKS.map(b => `<option value="${b.id}">${b.name}</option>`).join('');
 
   if (loan) {
@@ -285,7 +279,7 @@ function openLoanModal(loan = null) {
   } else {
     titleEl.textContent = 'وام جدید';
     idInput.value = '';
-    bankSelect.value = 'melli'; // پیش‌فرض
+    bankSelect.value = 'melli';
     titleInput.value = '';
     totalInput.value = '';
     instInput.value = '';
@@ -365,7 +359,6 @@ async function deleteLoan(id) {
   render(); showToast('وام حذف شد');
 }
 
-// ---------- payment modal ----------
 function openPaymentModal(loanId) {
   const loan = loans.find((l) => l.id === loanId);
   if (!loan) return;
@@ -416,7 +409,6 @@ async function handlePaymentSubmit(e) {
   }
 }
 
-// ---------- payments history ----------
 function openHistoryModal(loanId) {
   const loan = loans.find((l) => l.id === loanId);
   if (!loan) return;
@@ -459,7 +451,6 @@ async function deletePayment(paymentId) {
   render(); closeHistoryModal(); showToast('پرداخت حذف شد');
 }
 
-// ---------- real-time ----------
 function subscribeToChanges() {
   if (!currentUser) return;
   loansSubscription = supabase.channel(`loans-${currentUser.id}`).on('postgres_changes', { event: '*', schema: 'public', table: 'loans', filter: `user_id=eq.${currentUser.id}` }, handleLoanRealtime).subscribe();
@@ -482,10 +473,12 @@ function handlePaymentRealtime(payload) {
   render();
 }
 
-// ---------- listeners ----------
 function attachListeners() {
   if (listenersAttached) return;
   listenersAttached = true;
+
+  initDatePicker(document.getElementById('loan-start-date'));
+  initDatePicker(document.getElementById('payment-paid-at'));
 
   document.querySelectorAll('[data-open-loan-modal]').forEach((el) => el.addEventListener('click', () => openLoanModal()));
   document.getElementById('loan-form')?.addEventListener('submit', handleLoanSubmit);
@@ -515,7 +508,6 @@ function attachListeners() {
   });
 }
 
-// ---------- public ----------
 export function initLoans(user) {
   if (currentUser?.id === user?.id && user) return;
   if (loansSubscription) supabase.removeChannel(loansSubscription);
