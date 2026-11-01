@@ -13,6 +13,8 @@
   <link rel="stylesheet" href="css/auth.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/modal.css">
+  <link rel="stylesheet" href="css/tasks.css">
 </head>
 <body>
   <div id="loading-screen" class="loading-screen">
@@ -184,7 +186,7 @@
                 </svg>
               </div>
               <div class="stat-content">
-                <div class="stat-value">۰</div>
+                <div class="stat-value" data-stat="today-tasks">۰</div>
                 <div class="stat-label">تسک‌های امروز</div>
               </div>
             </div>
@@ -230,7 +232,7 @@
               </div>
               <p class="empty-title">هنوز تسکی برای امروز نداری</p>
               <p class="empty-desc">برنامه امروزت رو منظم کن</p>
-              <button type="button" class="btn btn-primary btn-sm" data-toast="ماژول تسک‌ها به زودی فعال می‌شود ✨">افزودن تسک</button>
+              <button type="button" class="btn btn-primary btn-sm" data-toast="برای افزودن تسک به تب برنامه برو ✨">افزودن تسک</button>
             </div>
           </div>
 
@@ -248,23 +250,55 @@
               </div>
               <p class="empty-title">وامی ثبت نکردی</p>
               <p class="empty-desc">وام‌هات رو اضافه کن و اقساط رو پیگیری کن</p>
-              <button type="button" class="btn btn-primary btn-sm" data-toast="ماژول وام‌ها به زودی فعال می‌شود ✨">افزودن وام</button>
+              <button type="button" class="btn btn-primary btn-sm" data-toast="ماژول وام‌ها در مرحله بعدی فعال می‌شود ✨">افزودن وام</button>
             </div>
           </div>
         </section>
 
         <!-- صفحه برنامه امروز -->
         <section class="page hidden" data-page="tasks">
-          <div class="page-placeholder">
-            <div class="placeholder-icon">
+          <div class="tasks-toolbar">
+            <div class="filter-tabs">
+              <button type="button" class="filter-tab active" data-filter="all">فعال</button>
+              <button type="button" class="filter-tab" data-filter="today">امروز</button>
+              <button type="button" class="filter-tab" data-filter="week">این هفته</button>
+              <button type="button" class="filter-tab" data-filter="completed">انجام‌شده</button>
+            </div>
+            <button type="button" class="btn btn-primary btn-sm" id="add-task-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;">
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+              <span>تسک جدید</span>
+            </button>
+          </div>
+
+          <div class="priority-chips">
+            <button type="button" class="chip active" data-priority="all">همه</button>
+            <button type="button" class="chip chip-low" data-priority="low">کم</button>
+            <button type="button" class="chip chip-medium" data-priority="medium">متوسط</button>
+            <button type="button" class="chip chip-high" data-priority="high">زیاد</button>
+          </div>
+
+          <div class="tasks-list" id="tasks-list"></div>
+
+          <div class="tasks-empty hidden" id="tasks-empty">
+            <div class="empty-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="9 11 12 14 22 4"/>
                 <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
               </svg>
             </div>
-            <h2>برنامه امروز</h2>
-            <p>ماژول تسک‌ها در مرحله بعدی فعال می‌شود</p>
+            <p class="empty-title">تسکی پیدا نشد</p>
+            <p class="empty-desc">اولین تسکت رو اضافه کن تا شروع کنیم</p>
           </div>
+
+          <button type="button" class="fab" id="tasks-fab" aria-label="افزودن تسک">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/>
+              <line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
         </section>
 
         <!-- صفحه وام‌ها -->
@@ -309,6 +343,75 @@
   </div>
 
   <div id="toast-container" class="toast-container"></div>
+
+  <!-- مودال تسک -->
+  <div class="modal-backdrop" id="task-modal-backdrop" data-task-modal-close></div>
+  <div class="modal" id="task-modal" role="dialog" aria-modal="true" aria-labelledby="task-modal-title">
+    <div class="modal-header">
+      <h2 id="task-modal-title">تسک جدید</h2>
+      <button type="button" class="btn-icon" data-task-modal-close aria-label="بستن">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <form id="task-form">
+      <div class="modal-body">
+        <input type="hidden" id="task-id">
+        <div class="form-group">
+          <label class="form-label" for="task-title">عنوان تسک <span class="required">*</span></label>
+          <input type="text" id="task-title" class="input" required maxlength="200" placeholder="مثلاً تماس با مشتری">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="task-description">توضیحات</label>
+          <textarea id="task-description" class="input" rows="2" maxlength="500" placeholder="جزئیات بیشتر (اختیاری)"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="task-priority">اولویت</label>
+            <select id="task-priority" class="input">
+              <option value="low">کم</option>
+              <option value="medium" selected>متوسط</option>
+              <option value="high">زیاد</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="task-due-date">تاریخ</label>
+            <input type="date" id="task-due-date" class="input" dir="ltr">
+          </div>
+        </div>
+        <div class="modal-error hidden" id="task-modal-error"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-task-modal-close>انصراف</button>
+        <button type="submit" class="btn btn-primary" id="task-submit-btn">
+          <span class="btn-text">ذخیره</span>
+          <span class="btn-loader hidden"></span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- مودال تایید -->
+  <div class="modal-backdrop" id="confirm-backdrop"></div>
+  <div class="modal modal-small" id="confirm-modal" role="dialog" aria-modal="true">
+    <div class="modal-body modal-body-center">
+      <div class="confirm-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+      </div>
+      <h2 id="confirm-title">حذف تسک</h2>
+      <p id="confirm-message" class="confirm-message">آیا مطمئنی؟</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" id="confirm-cancel">انصراف</button>
+      <button type="button" class="btn btn-danger" id="confirm-ok">حذف</button>
+    </div>
+  </div>
 
   <script type="module" src="js/app.js"></script>
 </body>
