@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>آفلاین — مدیریت روزانه</title>
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      font-family: 'Vazirmatn', sans-serif;
+      background: #0a0a0f;
+      color: #f5f5f7;
+      text-align: center;
+    }
+    .wrap {
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    .icon {
+      width: 88px;
+      height: 88px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, #7c5cff 0%, #22d3ee 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 40px rgba(124, 92, 255, 0.35);
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+    .icon svg { width: 44px; height: 44px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    h1 { font-size: 22px; font-weight: 700; }
+    p { color: #a0a0b0; font-size: 14px; line-height: 1.8; }
+    button {
+      padding: 12px 28px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #7c5cff 0%, #22d3ee 100%);
+      color: white;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      box-shadow: 0 4px 16px rgba(124, 92, 255, 0.35);
+      transition: transform 0.15s;
+    }
+    button:active { transform: scale(0.97); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="icon">
+      <svg viewBox="0 0 24 24">
+        <path d="M1 1l22 22"/>
+        <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/>
+        <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/>
+        <path d="M10.71 5.05A16 16 0 0 1 22.58 9"/>
+        <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/>
+        <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+        <line x1="12" y1="20" x2="12.01" y2="20"/>
+      </svg>
+    </div>
+    <h1>اتصال اینترنت قطع است</h1>
+    <p>برای استفاده از «مدیریت روزانه» به اینترنت نیاز داری. وقتی اتصال برگشت، دوباره امتحان کن.</p>
+    <button onclick="location.reload()">تلاش مجدد</button>
+  </div>
+</body>
+</html>
