@@ -4,6 +4,7 @@ import { initTheme } from './theme.js';
 import { initRouter } from './router.js';
 import { initToastDelegation } from './ui.js';
 import { initTasks } from './tasks.js';
+import { initLoans } from './loans.js';
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -29,6 +30,7 @@ function showMain(user) {
   if (user) {
     updateUserUI(user);
     initTasks(user);
+    initLoans(user);
   }
   if (navigate) navigate();
 }
@@ -88,14 +90,8 @@ function setupUserMenu() {
       e.stopPropagation();
       dropdown.classList.toggle('open');
     });
-
-    document.addEventListener('click', () => {
-      dropdown.classList.remove('open');
-    });
-
-    dropdown.addEventListener('click', (e) => {
-      e.stopPropagation();
-    });
+    document.addEventListener('click', () => dropdown.classList.remove('open'));
+    dropdown.addEventListener('click', (e) => e.stopPropagation());
   }
 
   if (logoutBtn) {
@@ -143,6 +139,7 @@ async function bootstrap() {
       showMain(newSession.user);
     } else if (event === 'SIGNED_OUT') {
       initTasks(null);
+      initLoans(null);
       showAuth();
     } else if (event === 'TOKEN_REFRESHED' && newSession) {
       updateUserUI(newSession.user);
